@@ -3,14 +3,14 @@ package com.allever.designpatterns.proxy;
 /**
  * Created by allever on 18-7-23.
  */
-public class MyProxy implements Broser {
-    private Broser mBroser;
+public class MyProxy implements IBroser {
+    private IBroser mIBroser;
 
-    public MyProxy(Broser concrectObj){
-        mBroser = concrectObj;
+    public MyProxy(IBroser concrectObj){
+        mIBroser = concrectObj;
     }
     @Override
     public void visitGoogle() {
-        mBroser.visitGoogle();
+        mIBroser.visitGoogle();
     }
 }
