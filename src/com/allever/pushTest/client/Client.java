@@ -31,12 +31,14 @@ public class Client {
             startServerListener(readerFromServer);
 
             String keyBoardContent = null;
-            String responses = null;
+            int count = 0;
             while (!(keyBoardContent = readerFromKeyboard.readLine()).equalsIgnoreCase("bye")){
-               writer.write(keyBoardContent + "\n");
-               writer.flush();
-//               responses = readerFromServer.readLine();
-//               System.out.println(responses);
+                writer.write(keyBoardContent);
+                if (count % 2 == 0){
+                    writer.write( "\n");
+                }
+                count ++;
+                writer.flush();
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -59,6 +61,8 @@ public class Client {
                     }
                 }catch (Exception e){
                     e.printStackTrace();
+                }finally {
+                    CloseUtil.close(reader);
                 }
 
             }

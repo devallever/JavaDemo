@@ -18,6 +18,8 @@ public class SocketServer {
 
     BufferedWriter writer;
 
+    BufferedReader reader;
+
     public static void main(String[] args){
 
         SocketServer socketServer = new SocketServer();
@@ -28,43 +30,47 @@ public class SocketServer {
     private void startServer() {
         ServerSocket serverSocket = null;
         Socket socket = null;
-        BufferedReader reader = null;
+
         try {
-            serverSocket = new ServerSocket(8989);
+            serverSocket = new ServerSocket(9898);
             System.out.println("server started...");
-            socket = serverSocket.accept();
-            System.out.println("client " + socket.hashCode() + " connected.");
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    try {
-                        writer.write("server beat once...\n");
-                        writer.flush();
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-
-                }
-            }, 3000, 3000);
-
-            String clientMsg = null;
-            while (! (clientMsg = reader.readLine()).equalsIgnoreCase("bye")){
-                System.out.println("clientMsg = " + clientMsg);
-                writer.write("server reply: " + clientMsg + "\n");
-                writer.flush();
+            while (true){
+                socket = serverSocket.accept();
+                managConnection(socket);
             }
+
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            CloseUtil.close(writer);
-            CloseUtil.close(reader);
-            CloseUtil.close(socket);
             CloseUtil.close(serverSocket);
         }
     }
 
+    public void managConnection(final Socket socket){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    System.out.println("client " + socket.hashCode() + " connected.");
+                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+                    String clientMsg = null;
+                    while ((clientMsg = reader.readLine()) != null){
+                        System.out.println("client " + socket.hashCode() + " clientMsg = " + clientMsg);
+                        writer.write("server reply: " + clientMsg + "\n");
+                        writer.flush();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }finally {
+                    CloseUtil.close(writer);
+                    CloseUtil.close(reader);
+                    CloseUtil.close(socket);
+                }
+            }
+        }).start();
+    }
 
 }
