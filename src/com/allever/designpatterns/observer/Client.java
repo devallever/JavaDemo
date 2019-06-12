@@ -10,5 +10,13 @@ public class Client {
         forground.regist(xiaohong);
         forground.setMessage("领导来了");
         forground.notifyDataSetChanged();
+
+
+        DevTech devTech = new DevTech();
+        Coder devMing = new Coder("XiaoMing");
+        Coder devHong = new Coder("XiaoHOng");
+        devTech.addObserver(devHong);
+        devTech.addObserver(devMing);
+        devTech.postMsg("干货来了");
     }
 }
