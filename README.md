@@ -1,2 +1,2 @@
 # JavaDemo
-java demo
+Java练习
