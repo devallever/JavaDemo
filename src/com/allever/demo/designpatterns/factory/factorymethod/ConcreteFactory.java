@@ -7,11 +7,16 @@ public class ConcreteFactory extends FruitFactory {
     public <T extends Fruit> T createFruit(Class<T> clz) {
         Fruit fruit = null;
         try {
-            fruit =  (Fruit)(Class.forName(clz.getName()).newInstance());
+            fruit =  (Fruit)(Class.forName(clz.getName()).getDeclaredConstructor().newInstance());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return (T)fruit;
+    }
+
+    @Override
+    Fruit createFruit() {
+        return null;
     }
 }
